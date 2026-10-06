@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Happy Birthday!</title>
+<style>
+@property --a{syntax:'<angle>';initial-value:0deg;inherits:false}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#05030f;color:#fff;font-family:'Trebuchet MS','Segoe UI',sans-serif;overflow:hidden}
+body{background:radial-gradient(ellipse at 50% 20%,#1b0b3a,#05030f 70%)}
+#bg{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+section{position:fixed;inset:0;z-index:1;display:flex;flex-direction:column;align-items:center;overflow-y:auto;padding:20px 16px 40px;text-align:center}
+.hide{display:none!important}
+/* RGB buttons */
+.rgb-btn{position:relative;z-index:0;border:0;border-radius:60px;padding:15px 28px;margin:8px;font:700 1.05rem inherit;font-family:inherit;color:#fff;background:#0b0818;cursor:pointer;transition:transform .2s;animation:pop 2.4s ease-in-out infinite}
+.rgb-btn::before{content:'';position:absolute;inset:-3px;border-radius:inherit;z-index:-2;background:conic-gradient(from var(--a),#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00);animation:spin 3s linear infinite;filter:drop-shadow(0 0 8px #f0f)}
+.rgb-btn::after{content:'';position:absolute;inset:0;border-radius:inherit;z-index:-1;background:#0b0818}
+.rgb-btn:hover{transform:scale(1.1) rotate(-2deg)}.rgb-btn:active{transform:scale(.94)}
+.rgb-btn:focus-visible{outline:3px solid #fff;outline-offset:4px}
+@keyframes spin{to{--a:360deg}}
+@keyframes pop{50%{transform:scale(1.06)}}
+@keyframes hue{to{filter:hue-rotate(360deg)}}
+/* intro */
+#intro{justify-content:center}
+#introText{font-size:clamp(1.5rem,6vw,2.6rem);min-height:3.4em;max-width:720px;font-weight:700;text-shadow:0 0 18px #0ff,0 0 40px #f0f;display:flex;align-items:center;justify-content:center}
+#introText.in{animation:fadeIn 1.2s both}
+@keyframes fadeIn{from{opacity:0;transform:scale(.8);filter:blur(12px)}to{opacity:1;transform:none;filter:none}}
+#count{font-size:clamp(6rem,30vw,14rem);font-weight:900;line-height:1;min-height:1em;background:linear-gradient(90deg,#f00,#ff0,#0f0,#0ff,#00f,#f0f);-webkit-background-clip:text;background-clip:text;color:transparent;animation:hue 3s linear infinite}
+#count.tick{animation:hue 3s linear infinite,boom .9s both}
+@keyframes boom{from{transform:scale(2.2);opacity:0}30%{opacity:1}to{transform:scale(.8);opacity:.2}}
+#skip{position:fixed;top:14px;right:14px;z-index:5;background:none;border:1px solid #ffffff55;color:#fff;border-radius:20px;padding:6px 14px;cursor:pointer}
+#flash{position:fixed;inset:0;background:#fff;z-index:9;opacity:0;pointer-events:none}
+#flash.go{animation:fl 1s ease-out}
+@keyframes fl{from{opacity:1}to{opacity:0}}
+/* birthday */
+.heartWrap{position:relative;flex:none;margin-top:6px}
+#heart{display:block}
+.base{position:absolute;left:50%;bottom:7%;width:62%;height:9%;transform:translateX(-50%);border-radius:50%;background:radial-gradient(ellipse,#0ff 0,#f0f 45%,transparent 72%);filter:blur(5px);animation:hue 5s linear infinite}
+h1{font-size:clamp(2.2rem,9vw,4.6rem);line-height:1.05;margin-top:4px;animation:hue 5s linear infinite}
+h1 span{display:inline-block;color:#ff2d95;text-shadow:0 0 12px currentColor,0 0 32px #f0f;animation:drop .9s cubic-bezier(.3,1.6,.5,1) both,wave 2.2s ease-in-out infinite}
+@keyframes drop{from{transform:translateY(-120px) scale(.2);opacity:0}}
+@keyframes wave{50%{transform:translateY(-8px)}}
+h2{font-size:clamp(1.6rem,7vw,3rem);margin:6px 0;animation:hue 4s linear infinite reverse;color:#4df}
+.love{font-size:clamp(1.5rem,6vw,2.3rem);font-weight:800;margin:8px 0}
+.love .h{display:inline-block;animation:beat 1s infinite;color:#f24}
+.love b{display:inline-block;animation:wave 1.6s ease-in-out infinite;text-shadow:0 0 14px #f0f}
+@keyframes beat{0%,100%{transform:scale(1)}15%{transform:scale(1.35)}30%{transform:scale(1)}45%{transform:scale(1.25)}}
+.card{max-width:560px;margin:10px auto;padding:16px 20px;border-radius:22px;background:#ffffff10;backdrop-filter:blur(6px);border:1px solid #ffffff30;line-height:1.55;font-size:1.05rem}
+.fl{position:fixed;bottom:-40px;z-index:0;pointer-events:none;animation:up linear forwards;white-space:nowrap;font-weight:800}
+@keyframes up{to{transform:translateY(-115vh) rotate(var(--r,20deg));opacity:0}}
+/* gift box */
+.gift{position:relative;width:240px;margin:16px auto 0;display:flex;flex-direction:column;align-items:center;cursor:pointer;padding-top:6px;transition:padding .5s}
+.gift.open{padding-top:128px;cursor:default}
+.prizes{display:none;position:absolute;top:0;left:50%;transform:translateX(-50%);width:max-content;flex-direction:column;align-items:center;z-index:0}
+.gift.open .prizes{display:flex}
+.gift.open .prizes .rgb-btn{animation:rise .8s cubic-bezier(.3,1.5,.5,1) both,pop 2.4s ease-in-out 1s infinite}
+.gift.open .prizes .rgb-btn:nth-child(2){animation-delay:.2s,1.2s}
+@keyframes rise{from{transform:translateY(130px) scale(.2);opacity:0}}
+.gbox{position:relative;z-index:1;width:170px;height:150px;animation:wig 2.2s ease-in-out infinite,hue 6s linear infinite}
+.gift.open .gbox{animation:hue 6s linear infinite}
+@keyframes wig{0%,45%,100%{transform:rotate(0)}10%{transform:rotate(-6deg)}20%{transform:rotate(6deg)}30%{transform:rotate(-3deg)}}
+.gb,.gl{position:absolute;left:0;right:0;background:linear-gradient(135deg,#ff2d95,#7a2dff)}
+.gb{bottom:0;left:8px;right:8px;height:104px;border-radius:0 0 12px 12px;box-shadow:0 0 34px #f0f9}
+.gl{top:0;height:50px;border-radius:10px;z-index:2;box-shadow:0 8px 14px #0006;transition:transform .9s cubic-bezier(.3,1.4,.5,1)}
+.gb::before,.gl::before{content:'';position:absolute;left:50%;top:0;bottom:0;width:26px;transform:translateX(-50%);background:linear-gradient(90deg,#ffe066,#ffb300,#ffe066)}
+.gl::after{content:'🎀';position:absolute;top:-36px;left:50%;transform:translateX(-50%);font-size:48px}
+.gift.open .gl{transform:translate(78px,-70px) rotate(26deg)}
+.ghint{margin-top:8px;font-weight:700;text-shadow:0 0 12px #f0f}
+.gift.open .ghint{display:none}
+.gift.gone .prizes{top:108px;transition:top .9s cubic-bezier(.3,1.3,.5,1)}
+.gift.gone .gbox{animation:boxGone .9s ease-in forwards}
+@keyframes boxGone{0%{transform:scale(1)}30%{transform:scale(1.18) rotate(-6deg)}100%{transform:scale(0) rotate(45deg);opacity:0;filter:blur(8px)}}
+/* cake */
+#cakeWrap{position:fixed;inset:0;z-index:15;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;overflow-y:auto;text-align:center}
+#cakeSvg{width:min(96vw,470px);overflow:visible;filter:drop-shadow(0 10px 28px #f0f7)}
+.flame{opacity:0;transform:scale(0);transform-box:fill-box;transform-origin:50% 100%}
+.lit .flame{animation:ignite .35s var(--d) both,flick .3s calc(var(--d) + .35s) ease-in-out infinite alternate}
+.out .flame{animation:none;opacity:0;transform:scale(0)}
+@keyframes ignite{from{opacity:0;transform:scale(0)}to{opacity:1;transform:scale(1)}}
+@keyframes flick{from{transform:scale(1) rotate(-5deg)}to{transform:scale(1.14,.9) rotate(5deg)}}
+.smoke{opacity:0;transform-box:fill-box;transform-origin:center}
+.out .smoke{animation:smoke 1.8s var(--d) ease-out both}
+@keyframes smoke{from{opacity:.8;transform:translateY(0) scale(1)}to{opacity:0;transform:translateY(-45px) scale(3.5)}}
+/* someone brings the cake */
+.chefG{animation:enter 2.3s cubic-bezier(.2,.7,.3,1) both,leave 1.5s 3.1s ease-in forwards}
+.cakeAll{animation:enter 2.3s cubic-bezier(.2,.7,.3,1) both}
+@keyframes enter{from{transform:translateX(-470px)}}
+@keyframes leave{to{transform:translateX(-470px)}}
+.bob{animation:bob .38s ease-in-out 6 alternate}
+.chefG .bob{animation:bob .38s ease-in-out 6 alternate,bob .38s ease-in-out 3.1s 4 alternate}
+@keyframes bob{to{transform:translateY(-7px)}}
+.put{animation:put 3s both}
+@keyframes put{0%,76%{transform:translateY(-42px)}88%{transform:translateY(4px)}100%{transform:translateY(0)}}
+/* candles are added one by one */
+.cd{opacity:0}
+.add .cd{animation:cdrop .55s calc(var(--k)*.26s) cubic-bezier(.3,1.6,.5,1) both}
+@keyframes cdrop{from{transform:translateY(-170px);opacity:0}to{transform:none;opacity:1}}
+.gone .cd{animation:cgone .9s calc(var(--k)*.07s) ease-in forwards}
+@keyframes cgone{from{transform:none;opacity:1}to{transform:translateY(-200px);opacity:0}}
+/* knife + pieces */
+.kn{opacity:0;transform:translateY(-190px);filter:drop-shadow(0 0 6px #0ff)}
+.kn.show{opacity:1;animation:kdrop .9s cubic-bezier(.3,1.4,.5,1) both,kbob 1s ease-in-out .9s infinite alternate}
+.kn.idle{opacity:1;animation:kbob 1s ease-in-out infinite alternate}
+.kn.cutting{opacity:1;animation:kcut 1.1s ease-in-out both}
+@keyframes kdrop{from{transform:translateY(-560px)}to{transform:translateY(-190px)}}
+@keyframes kbob{from{transform:translateY(-190px)}to{transform:translateY(-172px)}}
+@keyframes kcut{0%{transform:translateY(-190px)}38%,50%{transform:translateY(8px)}100%{transform:translateY(-190px)}}
+.pc.go{animation:pcgo 1s cubic-bezier(.3,1.2,.5,1) forwards}
+@keyframes pcgo{0%{transform:none}30%{transform:translate(calc(var(--tx)*.2),-16px) scale(1.03)}100%{transform:translate(var(--tx),var(--ty)) scale(.52)}}
+.pl,.inn{opacity:0;transition:opacity .4s}
+.bunt{animation:sway 3.5s ease-in-out infinite alternate}
+@keyframes sway{from{transform:rotate(-1.2deg)}to{transform:rotate(1.2deg)}}
+.bl{animation:bfl 3s ease-in-out infinite alternate}
+@keyframes bfl{to{transform:translateY(-12px)}}
+.tw{transform-box:fill-box;transform-origin:center;animation:twk 1.6s ease-in-out var(--d) infinite}
+@keyframes twk{0%,100%{transform:scale(0);opacity:0}50%{transform:scale(1.4);opacity:1}}
+.disco{position:absolute;left:50%;top:50%;width:120%;aspect-ratio:1;margin:-60% 0 0 -60%;border-radius:50%;background:conic-gradient(#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00);filter:blur(55px);opacity:.35;animation:rot 8s linear infinite;pointer-events:none}
+@keyframes rot{to{transform:rotate(360deg)}}
+#cakeBox{position:relative}#cakeSvg{position:relative}
+#tapHint{font-weight:800;font-size:1.2rem;margin:2px 0 8px;animation:pop 1.3s ease-in-out infinite;text-shadow:0 0 14px #0ff}
+#cakeMsg{font-size:clamp(1.3rem,5.5vw,2rem);font-weight:800;margin:8px 0;min-height:1.4em;animation:hue 4s linear infinite;color:#ff6ad5;text-shadow:0 0 14px currentColor}
+.photo{position:absolute;left:50%;top:43%;width:40%;aspect-ratio:1;transform:translate(-50%,-50%) scale(.2);border-radius:50%;padding:4px;background:conic-gradient(from var(--a),#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00);animation:spin 3s linear infinite;box-shadow:0 0 28px #f0f9;opacity:0;pointer-events:none;transition:opacity .8s,transform 1s cubic-bezier(.3,1.6,.5,1)}
+.photo.on{opacity:1;transform:translate(-50%,-50%) scale(1);animation:spin 3s linear infinite,pbeat 1.2s ease-in-out infinite}
+.photo img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;background:#0b0818}
+@keyframes pbeat{50%{filter:drop-shadow(0 0 14px #f0f)}}
+/* gift suspense */
+.gwrap{position:relative;display:flex;justify-content:center;width:100%}
+.gwrap .gift{position:relative;z-index:1}
+.rays{position:absolute;left:50%;top:50%;width:580px;height:580px;margin:-290px 0 0 -290px;border-radius:50%;background:repeating-conic-gradient(#ff3d71aa 0 7deg,transparent 7deg 22deg);-webkit-mask:radial-gradient(circle,#000 0,transparent 66%);mask:radial-gradient(circle,#000 0,transparent 66%);opacity:0;transition:opacity 1s;animation:rot 10s linear infinite,hue 4s linear infinite;pointer-events:none}
+.gwrap.on .rays{opacity:1}
+.gift.s2 .gbox{animation:shk2 .3s linear infinite,hue 6s linear infinite}
+.gift.s3 .gbox{animation:shk3 .12s linear infinite,hue 3s linear infinite}
+.gift.s3 .gb{box-shadow:0 0 70px 24px #fffa,0 0 40px #0ff}
+.gift.s3 .gl{animation:lidj .15s linear infinite}
+@keyframes shk2{0%,100%{transform:rotate(0)}25%{transform:translateX(-4px) rotate(-3deg)}75%{transform:translateX(4px) rotate(3deg)}}
+@keyframes shk3{0%,100%{transform:scale(1.04)}25%{transform:translate(-7px,3px) rotate(-6deg) scale(1.08)}50%{transform:translate(6px,-4px) rotate(5deg) scale(1.04)}75%{transform:translate(-5px,-3px) rotate(-4deg) scale(1.08)}}
+@keyframes lidj{50%{transform:translateY(-11px) rotate(2deg)}}
+#gMsg{font-size:clamp(1.2rem,5vw,1.9rem);font-weight:800;min-height:2.8em;margin-bottom:46px;max-width:520px;display:flex;align-items:center;justify-content:center;text-shadow:0 0 16px #f0f}
+#gMsg.in{animation:fadeIn 1s both}
+#gcount{font-size:clamp(4.5rem,22vw,8rem);font-weight:900;line-height:1;min-height:1em;background:linear-gradient(90deg,#f00,#ff0,#0f0,#0ff,#00f,#f0f);-webkit-background-clip:text;background-clip:text;color:transparent;animation:hue 3s linear infinite}
+#gcount.tick{animation:hue 3s linear infinite,boom .9s both}
+/* GAME ZONE - a different RGB theme: pure red / green / blue on black */
+.zone{background:radial-gradient(circle at 12% 15%,#f003,transparent 42%),radial-gradient(circle at 90% 25%,#0f03,transparent 42%),radial-gradient(circle at 50% 105%,#00f4,transparent 55%),#00050a}
+.zone::before,#gameWrap::before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;background:repeating-linear-gradient(0deg,#0f06 0 1px,transparent 1px 42px),repeating-linear-gradient(90deg,#f006 0 1px,transparent 1px 42px);animation:grid 3s linear infinite,hue 8s linear infinite;opacity:.55}
+#gameWrap::before{position:absolute;z-index:0}
+@keyframes grid{to{background-position:0 42px,42px 0}}
+.glitch{font-weight:900;letter-spacing:4px;color:#fff;animation:glt 1.6s steps(1) infinite}
+@keyframes glt{0%{text-shadow:-3px 0 #f00,3px 0 #0ff}30%{text-shadow:3px 0 #f00,-3px 0 #00f;transform:skewX(-4deg)}34%{transform:none}60%{text-shadow:0 3px #0f0,0 -3px #f00}100%{text-shadow:-3px 0 #f00,3px 0 #0ff}}
+.zone h2.glitch{font-size:clamp(2.4rem,12vw,4.6rem);margin:0}
+.zsub{letter-spacing:6px;text-transform:uppercase;opacity:.85;margin:6px 0 18px;text-shadow:-1px 0 #f00,1px 0 #0f0}
+.cards{display:flex;flex-wrap:wrap;justify-content:center}
+.gcard{position:relative;z-index:0;width:min(80vw,290px);padding:22px 18px;margin:12px;border:0;border-radius:6px;background:#050a12;color:#fff;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;font-family:inherit;animation:cin .7s cubic-bezier(.3,1.5,.5,1) backwards;transition:transform .2s}
+.gcard::before{content:'';position:absolute;inset:-3px;border-radius:8px;z-index:-2;background:conic-gradient(from var(--a),#f00,#0f0,#00f,#f00);animation:spin 2.2s linear infinite}
+.gcard::after{content:'';position:absolute;inset:0;border-radius:5px;z-index:-1;background:#050a12}
+.gcard:hover{transform:scale(1.05)}.gcard:active{transform:scale(.95)}
+.gcard .ico{font-size:3.2rem;animation:ico 1.6s ease-in-out infinite}
+.gcard b{font-size:1.25rem;letter-spacing:2px;text-transform:uppercase}
+.gcard small{opacity:.75}
+.zb{width:auto;flex-direction:row;padding:10px 22px;margin:8px;animation:none}
+@keyframes cin{from{transform:translateY(70px) scale(.6);opacity:0}}
+@keyframes ico{50%{transform:translateY(-8px) rotate(-6deg) scale(1.1)}}
+/* game suspense intro */
+#gIntro{position:absolute;inset:0;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#00050acc;overflow:hidden}
+#gIntro .ring{position:absolute;left:50%;top:50%;width:260px;height:260px;margin:-130px 0 0 -130px;border:3px solid #f00;border-radius:50%;animation:ringp 2s linear infinite;box-shadow:0 0 18px currentColor}
+@keyframes ringp{from{transform:scale(.2);opacity:1}to{transform:scale(3.2);opacity:0}}
+#gTitle{font-size:clamp(1.5rem,7.5vw,3.2rem);letter-spacing:2px;text-align:center;position:relative;padding:0 8px}
+#gSub{margin:8px 0 14px;letter-spacing:3px;text-transform:uppercase;position:relative;min-height:1.4em}
+#gIntro .bar{width:min(70vw,300px);height:10px;border:1px solid #fff7;position:relative}
+#gIntro .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#f00,#0f0,#00f)}
+#gNum{font-size:clamp(5rem,26vw,10rem);font-weight:900;line-height:1;min-height:1em;position:relative;color:#fff;text-shadow:-5px 0 #f00,5px 0 #00f,0 0 30px #0f0}
+#gNum.pop{animation:gnum .75s both}
+@keyframes gnum{from{transform:scale(2.6);opacity:0;filter:blur(8px)}35%{opacity:1;filter:none}to{transform:scale(.85);opacity:.35}}
+/* game */
+#gameWrap{position:fixed;inset:0;z-index:20;background:radial-gradient(circle at 12% 15%,#f002,transparent 42%),radial-gradient(circle at 90% 25%,#0f02,transparent 42%),radial-gradient(circle at 50% 105%,#00f4,transparent 55%),#00050a}
+#game{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:crosshair}
+.hud{position:absolute;top:10px;left:0;right:0;display:flex;justify-content:space-between;padding:0 14px;font-weight:800;font-size:1.2rem;pointer-events:none;text-shadow:-2px 0 #f00,2px 0 #0ff}
+#gBack{position:absolute;bottom:12px;left:12px;z-index:6;font-size:.9rem}
+#tip{position:absolute;top:50px;left:0;right:0;text-align:center;opacity:.85;pointer-events:none}
+#over{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#000a;text-align:center}
+#over h2{font-size:2.4rem}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01s!important;animation-iteration-count:1!important}}
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+<div id="flash"></div>
+
+<section id="intro">
+  <button id="skip" class="hide">Skip</button>
+  <div id="introText">Tap the button to begin</div>
+  <div id="count"></div>
+  <button id="startBtn" class="rgb-btn">✨ Open My Surprise</button>
+</section>
+
+<section id="main" class="hide">
+  <div class="heartWrap"><canvas id="heart"></canvas><div class="base"></div><div class="photo" id="photo"><img id="photoImg" alt=""></div></div>
+  <h1 id="title"></h1>
+  <h2 id="nm"></h2>
+  <div class="love"><span class="h">❤</span> <b>I</b> <b style="animation-delay:.15s">Love</b> <b style="animation-delay:.3s">You</b> <span class="h" style="animation-delay:.2s">❤</span></div>
+  <div class="card" id="wish"></div>
+  <div class="gift" id="giftTeaser">
+    <div class="gbox"><div class="gl"></div><div class="gb"></div></div>
+    <div class="ghint">🎁 Tap the gift box to open your games!</div>
+  </div>
+  <div style="margin-top:10px"><button class="rgb-btn" id="party">🎂 Party Time</button></div>
+</section>
+
+<section id="giftPage" class="hide" style="justify-content:center">
+  <div id="gMsg"></div>
+  <div class="gwrap" id="gwrap">
+    <div class="rays"></div>
+    <div class="gift" id="gift">
+      <div class="prizes"><button class="rgb-btn" id="playGames" style="font-size:1.3rem;padding:18px 34px">🎮 Play Games</button></div>
+      <div class="gbox"><div class="gl"></div><div class="gb"></div></div>
+    </div>
+  </div>
+  <div id="gcount"></div>
+  <button class="rgb-btn" id="giftBack" style="margin-top:14px">⬅ Back</button>
+</section>
+
+<section id="menu" class="hide zone" style="justify-content:center">
+  <h2 class="glitch">GAME ZONE</h2>
+  <p class="zsub">Choose your mission</p>
+  <div class="cards">
+    <button class="gcard" data-g="balloon"><span class="ico">🚁</span><b>Balloon Blast</b><small>Fly the helicopter and pop every balloon</small></button>
+    <button class="gcard" data-g="jet" style="animation-delay:.2s"><span class="ico">✈️</span><b>Sky Fighter</b><small>Dodge and shoot the enemy jets</small></button>
+  </div>
+  <button class="gcard zb" id="menuBack">⬅ Back</button>
+</section>
+
+<section id="cakeWrap" class="hide">
+  <div id="cakeMsg"></div>
+  <div id="cakeBox"></div>
+  <div id="tapHint" class="hide">👆 Tap anywhere to cut the cake</div>
+  <div>
+    <button class="rgb-btn" id="mute">🔊 Sound on</button>
+    <button class="rgb-btn" id="cakeClose">⬅ Back</button>
+  </div>
+</section>
+
+<div id="gameWrap" class="hide">
+  <canvas id="game"></canvas>
+  <div class="hud"><span id="hL"></span><span id="hR"></span></div>
+  <div id="tip"></div>
+  <div id="gIntro" class="hide"><div class="ring"></div><div class="ring" style="animation-delay:.66s;border-color:#0f0"></div><div class="ring" style="animation-delay:1.33s;border-color:#00f"></div>
+    <div id="gTitle" class="glitch"></div><div id="gSub"></div><div class="bar"><i id="gBar"></i></div><div id="gNum"></div></div>
+  <button id="gBack" class="gcard zb">⬅ Back</button>
+  <div id="over" class="hide"><h2 class="glitch">GAME OVER</h2><p id="overMsg" style="font-size:1.3rem;margin:8px"></p>
+    <div><button class="gcard zb" id="again">🔁 Play Again</button><button class="gcard zb" id="quit">🎮 Menu</button></div></div>
+</div>
+
+<script>
+/* ======= CHANGE THESE ======= */
+const NAME = "My Dear Mariyam!";
+const PHOTO = "mariam2.jpeg";   // put her photo in the SAME folder as this file and write its file name here (e.g. "her.jpg"). Leave as is / missing = no photo shown.
+const WISH = " Happy Birthday, my sweet little princess! 🎂  You are 4 years old today, and I can't believe how fast you are growing. I miss you more than words can say. Even though you are so far away, you are always close to my heart.Your grandparents think of you every day, and your uncles love you so much and miss your beautiful smile. Every time we see your photo, our hearts feel happy and a little sad at the same time, because we wish we could hug you right now.I pray that you are always happy, healthy and safe, and that every dream you have comes true. One day soon we will celebrate together, with lots of cake and lots of hugs.We love you to the moon and back! 🌙💖Happy Birthday, our little star! ⭐ ";
+const LOVES = ["I love you ❤","Love you so much 💖","You are special ✨","Happy Birthday 🎂","Smile always 😊","You are my star ⭐"];
+/* ============================ */
+
+const $=id=>document.getElementById(id), sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const rnd=(a,b)=>a+Math.random()*(b-a), DPR=Math.min(devicePixelRatio||1,2);
+let AC,MG,muted=false;
+function AX(){if(!AC){AC=new(window.AudioContext||window.webkitAudioContext)();MG=AC.createGain();MG.gain.value=muted?0:1;MG.connect(AC.destination)}if(AC.state==='suspended')AC.resume();return AC}
+function snd(f=440,d=.1,t='square',v=.04,f2){try{AX();const o=AC.createOscillator(),g=AC.createGain(),n=AC.currentTime;o.type=t;o.frequency.value=f;if(f2)o.frequency.exponentialRampToValueAtTime(f2,n+d);g.gain.setValueAtTime(v,n);g.gain.exponentialRampToValueAtTime(.0001,n+d);o.connect(g);g.connect(MG);o.start();o.stop(n+d)}catch(e){}}
+
+/* ---------- background: stars, confetti, fireworks ---------- */
+const bg=$('bg'),bx=bg.getContext('2d');let W,H,stars=[],fx=[];
+function rs(){W=innerWidth;H=innerHeight;bg.width=W*DPR;bg.height=H*DPR;bx.setTransform(DPR,0,0,DPR,0,0);stars=Array.from({length:110},()=>({x:rnd(0,W),y:rnd(0,H),r:rnd(.5,2),p:rnd(0,6)}))}
+function confetti(n=160){for(let i=0;i<n;i++)fx.push({t:'c',x:rnd(0,W),y:rnd(-H*.4,0),vx:rnd(-40,40),vy:rnd(80,260),w:rnd(6,12),h:rnd(3,7),a:rnd(0,6),va:rnd(-8,8),hue:rnd(0,360),life:9})}
+function firework(x=rnd(W*.15,W*.85),y=rnd(H*.1,H*.5)){const h=rnd(0,360);snd(220,.5,'sawtooth',.03,60);for(let i=0;i<70;i++){const a=i/70*6.283,s=rnd(60,240);fx.push({t:'f',x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,hue:h+rnd(-30,30),life:rnd(.8,1.5),max:1.5})}}
+let T=0,last=performance.now();
+(function bgLoop(now){const dt=Math.min((now-last)/1000,.05);last=now;T+=dt;bx.clearRect(0,0,W,H);
+ for(const s of stars){bx.fillStyle=`hsla(${(T*40+s.x)%360},100%,80%,${.35+.35*Math.sin(T*2+s.p)})`;bx.beginPath();bx.arc(s.x,s.y,s.r,0,6.283);bx.fill()}
+ bx.globalCompositeOperation='lighter';
+ fx=fx.filter(p=>{p.life-=dt;if(p.life<=0)return false;p.x+=p.vx*dt;p.y+=p.vy*dt;
+  if(p.t==='c'){p.a+=p.va*dt;p.vx+=Math.sin(T*3+p.a)*20*dt;bx.save();bx.translate(p.x,p.y);bx.rotate(p.a);bx.fillStyle=`hsl(${p.hue},100%,60%)`;bx.fillRect(-p.w/2,-p.h/2,p.w,p.h);bx.restore()}
+  else{p.vy+=120*dt;p.vx*=.985;bx.fillStyle=`hsla(${p.hue},100%,60%,${p.life/p.max})`;bx.beginPath();bx.arc(p.x,p.y,2.2,0,6.283);bx.fill()}return true});
+ bx.globalCompositeOperation='source-over';requestAnimationFrame(bgLoop)})(last);
+addEventListener('resize',rs);rs();
+
+/* ---------- floating hearts and love texts ---------- */
+function floater(){const e=document.createElement('div');e.className='fl';const txt=Math.random()<.45;
+ e.textContent=txt?LOVES[Math.floor(Math.random()*LOVES.length)]:['❤','💖','💗','💜','💙','💚'][Math.floor(Math.random()*6)];
+ const hue=Math.floor(rnd(0,360));e.style.cssText=`left:${rnd(2,88)}%;font-size:${txt?rnd(16,26):rnd(22,48)}px;color:hsl(${hue},100%,70%);text-shadow:0 0 12px hsl(${hue},100%,60%);animation-duration:${rnd(6,11)}s;--r:${rnd(-30,30)}deg`;
+ document.body.appendChild(e);setTimeout(()=>e.remove(),11500)}
+
+/* ---------- particle heart (glowing, bursts and re-forms) ---------- */
+const hc=$('heart'),hx=hc.getContext('2d');let HS=300,P=[],phase='form',pt=0;
+function hs(){HS=Math.min(innerWidth*.82,330);hc.style.width=hc.style.height=HS+'px';hc.width=hc.height=HS*DPR;hx.setTransform(DPR,0,0,DPR,0,0)}
+for(let i=0;i<2000;i++){const t=rnd(0,6.283),k=Math.random()<.3?1:Math.sqrt(Math.random()),s=Math.sin(t);
+ P.push({x:rnd(-20,20),y:rnd(-20,20),vx:0,vy:0,tx:16*s*s*s*k,ty:-(13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t))*k-2.2,z:rnd(1,2.2)})}
+let heartOn=false,hlast=performance.now();
+function heartLoop(now){if(!heartOn)return;const dt=Math.min((now-hlast)/1000,.05);hlast=now;pt+=dt;const sc=HS/40,c=HS/2,cy=HS*.43;
+ if(phase==='form'&&pt>3.2){phase='hold';pt=0}
+ else if(phase==='hold'&&pt>3.5){phase='burst';pt=0;for(const p of P){const a=rnd(0,6.283),s=rnd(40,260)/40;p.vx=Math.cos(a)*s*1.6+(p.tx>0?1:-1)*2;p.vy=Math.sin(a)*s-rnd(0,4)}snd(120,.6,'sawtooth',.05,40)}
+ else if(phase==='burst'&&pt>1.6){phase='form';pt=0}
+ const beat=phase==='hold'?1+.05*Math.pow(Math.max(0,Math.sin(pt*7)),3):1;
+ hx.globalCompositeOperation='destination-out';hx.fillStyle='rgba(0,0,0,.28)';hx.fillRect(0,0,HS,HS);hx.globalCompositeOperation='lighter';
+ const damp=Math.exp(-(phase==='burst'?1.8:6)*dt);
+ for(const p of P){if(phase!=='burst'){p.vx+=(p.tx*beat-p.x)*42*dt;p.vy+=(p.ty*beat-p.y)*42*dt}else{p.vx+=-p.vy*.6*dt;p.vy+=p.vx*.6*dt}
+  p.vx*=damp;p.vy*=damp;p.x+=p.vx*dt*8*(phase==='burst'?1:.5)*(phase==='burst'?1:2);p.y+=p.vy*dt*8*(phase==='burst'?1:.5)*(phase==='burst'?1:2);
+  hx.fillStyle=`hsl(${(T*70+p.tx*7+p.ty*4)%360},100%,${55+p.z*6}%)`;hx.fillRect(c+p.x*sc,cy+p.y*sc,p.z,p.z)}
+ requestAnimationFrame(heartLoop)}
+
+/* ---------- intro (suspense) ---------- */
+let revealed=false;
+async function runIntro(){
+ $('startBtn').classList.add('hide');$('skip').classList.remove('hide');snd(300,.3,'sine',.06,600);
+ const lines=["Shhh… 🤫","Something magical is coming…","Someone very special has an important day ✨","Are you ready? 🎁"];
+ const t=$('introText');
+ for(const l of lines){if(revealed)return;t.textContent=l;t.classList.remove('in');void t.offsetWidth;t.classList.add('in');snd(200,.5,'sine',.05,500);await sleep(2300)}
+ t.textContent="Get ready…";
+ for(let n=5;n>=1;n--){if(revealed)return;const c=$('count');c.textContent=n;c.classList.remove('tick');void c.offsetWidth;c.classList.add('tick');snd(400+n*60,.2,'square',.05);await sleep(1000)}
+ reveal()}
+function reveal(){if(revealed)return;revealed=true;
+ $('flash').classList.add('go');snd(523,.8,'triangle',.08,1046);
+ $('intro').classList.add('hide');$('skip').classList.add('hide');$('main').classList.remove('hide');
+ $('title').innerHTML=[...'Happy Birthday!'].map((ch,i)=>ch===' '?' ':`<span style="animation-delay:${i*.07}s,${i*.12+1}s">${ch}</span>`).join('');
+ $('nm').textContent=NAME+' 🎂';$('wish').textContent=WISH;
+ {const im=$('photoImg');im.onload=()=>setTimeout(()=>$('photo').classList.add('on'),900);im.onerror=()=>$('photo').remove();im.src=PHOTO}
+ hs();heartOn=true;hlast=performance.now();requestAnimationFrame(heartLoop);
+ confetti(220);for(let i=0;i<4;i++)setTimeout(firework,i*500);
+ setInterval(floater,450);setInterval(()=>{if(!$('main').classList.contains('hide'))firework()},2600)}
+$('startBtn').onclick=runIntro;$('skip').onclick=reveal;
+/* gift box */
+let gtok=0;
+async function runGift(){const my=++gtok,gf=$('gift'),gw=$('gwrap'),m=$('gMsg'),c=$('gcount'),ok=()=>my===gtok;
+ $('main').classList.add('hide');$('menu').classList.add('hide');$('giftPage').classList.remove('hide');
+ gf.className='gift';gw.classList.remove('on');c.textContent='';
+ const say=t=>{m.textContent=t;m.classList.remove('in');void m.offsetWidth;m.classList.add('in')};
+ say('Shhh… what could be inside? 🤔');snd(180,.6,'sine',.06,260);await sleep(2200);if(!ok())return;
+ gf.classList.add('s2');say("Did you hear that? It's moving! 👀");for(let k=0;k<6;k++)setTimeout(()=>snd(90+k*10,.12,'sawtooth',.04),k*300);await sleep(2200);if(!ok())return;
+ gf.classList.add('s3');gw.classList.add('on');say('Something BIG is about to happen… 😱');await sleep(1700);if(!ok())return;
+ for(let n=3;n>=1;n--){c.textContent=n;c.classList.remove('tick');void c.offsetWidth;c.classList.add('tick');snd(300+n*140,.25,'square',.05);await sleep(950);if(!ok())return}
+ c.textContent='';$('flash').classList.remove('go');void $('flash').offsetWidth;$('flash').classList.add('go');
+ gf.className='gift open';say('SURPRISE!! 🎉');snd(500,.6,'triangle',.08,1400);confetti(140);setTimeout(()=>firework(W/2,H*.3),250);
+ await sleep(1700);if(!ok())return;
+ const r=gf.querySelector('.gbox').getBoundingClientRect();gf.classList.add('gone');snd(900,.6,'sine',.06,200);firework(r.left+r.width/2,r.top+r.height/2);confetti(60);
+ say('Your games are ready! Tap to play 🎮')}
+$('giftTeaser').onclick=runGift;
+$('giftBack').onclick=()=>{gtok++;$('giftPage').classList.add('hide');$('main').classList.remove('hide')};
+$('playGames').onclick=()=>{snd(400,.3,'square',.05,1000);$('giftPage').classList.add('hide');$('menu').classList.remove('hide')};
+$('menuBack').onclick=()=>{$('menu').classList.add('hide');$('giftPage').classList.remove('hide')};
+
+/* ---------- background music + Happy Birthday ---------- */
+let bgG,bgT,bgNext=0,bgBar=0;
+const CH=[[261.63,329.63,392],[220,261.63,329.63],[174.61,220,261.63],[196,246.94,293.66]],BS=[65.41,55,43.65,49];
+function bgN(f,t,d,ty,v){const o=AC.createOscillator(),g=AC.createGain();o.type=ty;o.frequency.value=f;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(bgG);o.start(t);o.stop(t+d+.05)}
+function bgSched(){if(!bgG)return;while(bgNext<AC.currentTime+1.3){const c=CH[bgBar%4],t=bgNext,q=.3;bgN(BS[bgBar%4],t,2.2,'sine',.13);c.forEach(f=>bgN(f,t,2.3,'triangle',.022));[0,1,2,1,2,1,0,1].forEach((k,j)=>bgN(c[k]*2,t+j*q,q*1.7,'sine',.05));bgNext+=2.4;bgBar++}}
+function bgStop(now){clearInterval(bgT);if(bgG){const g=bgG;bgG=null;try{g.gain.setTargetAtTime(0,AC.currentTime,now?.01:.25);setTimeout(()=>g.disconnect(),now?60:1600)}catch(e){}}}
+function bgStart(){try{AX();bgStop(true);bgG=AC.createGain();bgG.gain.value=1;bgG.connect(MG);bgNext=AC.currentTime+.15;bgBar=0;bgSched();bgT=setInterval(bgSched,300)}catch(e){}}
+const SONG=[[392,.75],[392,.25],[440,1],[392,1],[523,1],[494,2],[392,.75],[392,.25],[440,1],[392,1],[587,1],[523,2],[392,.75],[392,.25],[784,1],[659,1],[523,1],[494,1],[440,2],[698,.75],[698,.25],[659,1],[523,1],[587,1],[523,2]];
+let hbdOn=false,hbdTmr,hbdG,mus=[];
+function hbdPass(){AX();const g=AC.createGain();g.connect(MG);hbdG=g;let t=AC.currentTime+.1;const b=.44;
+ for(const [f,d] of SONG){const n=AC.createGain();n.gain.setValueAtTime(0,t);n.gain.linearRampToValueAtTime(.2,t+.03);n.gain.exponentialRampToValueAtTime(.001,t+d*b*.95);n.connect(g);
+  [['triangle',f],['sine',f/2]].forEach(([ty,fr])=>{const o=AC.createOscillator();o.type=ty;o.frequency.value=fr;o.connect(n);o.start(t);o.stop(t+d*b);mus.push(o)});t+=d*b}
+ return t-AC.currentTime}
+function hbdStop(quick){hbdOn=false;clearTimeout(hbdTmr);if(!AC)return;const g=hbdG,os=mus;mus=[];hbdG=null;
+ if(g){g.gain.setTargetAtTime(0,AC.currentTime,quick?.01:.25);setTimeout(()=>os.forEach(o=>{try{o.stop()}catch(e){}}),quick?40:1300)}
+ if(bgG)bgG.gain.setTargetAtTime(1,AC.currentTime,.5)}
+function hbdStart(){hbdStop(true);hbdOn=true;if(bgG)bgG.gain.setTargetAtTime(.3,AC.currentTime,.3);const loop=()=>{if(!hbdOn)return;const d=hbdPass();hbdTmr=setTimeout(loop,(d+.6)*1000)};loop()}
+$('mute').onclick=()=>{muted=!muted;if(MG)MG.gain.value=muted?0:1;$('mute').textContent=muted?'🔇 Sound off':'🔊 Sound on'};
+
+/* ---------- the cake scene ---------- */
+function drip(x1,x2,y,n){const w=(x2-x1)/n;let s=`M${x2} ${y-10}V${y}`;for(let i=0;i<n;i++)s+=`q${-w/4} 20 ${-w/2} 2q${-w/4} -10 ${-w/2} -2`;return s+`L${x1} ${y-10}Z`}
+function buildCake(){
+ const star=(cx,cy,r)=>Array.from({length:10},(_,k)=>{const an=-Math.PI/2+k*Math.PI/5,rr=k%2?r*.45:r;return (cx+Math.cos(an)*rr).toFixed(1)+','+(cy+Math.sin(an)*rr).toFixed(1)}).join(' ');
+ const layers=(x,y,w,h,sh)=>{const P=['#ffd9a8','#fffaf0','#ff5c7a','#ffd9a8','#fffaf0','#ff5c7a'],bh=h/P.length;return P.map((c,i)=>`<rect x="${x}" y="${y+i*bh}" width="${w}" height="${bh+.6}" fill="${c}"/>`).join('')+(sh?`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="#0000003a"/>`:'')};
+ let pearls='';for(let x=50;x<=270;x+=11)pearls+=`<circle cx="${x}" cy="262" r="3.6" fill="#fff" stroke="#ffc2de"/>`;
+ let dots='';for(let i=0;i<16;i++)dots+=`<circle cx="${54+(i*53)%212}" cy="${214+(i*29)%40}" r="3.4" fill="#ffffff45"/>`;
+ let stars='';for(let x=92;x<=232;x+=20)stars+=`<polygon points="${star(x,193,5)}" fill="#ffd23f" stroke="#ff9f1c" stroke-width=".6"/>`;
+ let cher='';[[56,196],[72,196],[248,196],[264,196]].forEach(([x,y])=>cher+=`<circle cx="${x}" cy="${y}" r="8" fill="#e5193d"/><circle cx="${x-2.5}" cy="${y-3}" r="2.2" fill="#fff9"/><path d="M${x} ${y-8}q4 -8 8 -10" stroke="#2a9d3a" stroke-width="2" fill="none"/>`);
+ let rb='';['#ff3b3b','#ff9f1c','#ffe14d','#3ddc6a','#3b8bff','#b44dff'].forEach((c,i)=>rb+=`<rect x="108" y="${122+i*3.4}" width="104" height="3.6" fill="${c}"/>`);
+ let hearts='';[124,160,196].forEach(x=>hearts+=`<text x="${x}" y="143" text-anchor="middle" font-size="11" fill="#ff3d71">❤</text>`);
+ const nm=NAME.length>16?NAME.slice(0,16):NAME,fs=Math.min(13,150/(nm.length*.62));
+ let can='';for(let i=0;i<7;i++){const x=(120+i*13.33).toFixed(1);
+  can+=`<g class="cd" style="--k:${i}"><rect x="${x-3}" y="72" width="6" height="31" rx="1.5" fill="hsl(${i*55},95%,65%)"/><rect x="${x-3}" y="80" width="6" height="3" fill="#ffffffb0"/><rect x="${x-3}" y="90" width="6" height="3" fill="#ffffffb0"/>
+  <circle class="smoke" cx="${x}" cy="62" r="3" fill="#d4d9ea" style="--d:${i*.1}s"/>
+  <g class="flame" style="--d:${(i*.14).toFixed(2)}s"><circle cx="${x}" cy="63" r="12" fill="#ffb30055"/><path d="M${x} 52Q${+x+6} 63 ${x} 72Q${x-6} 63 ${x} 52Z" fill="#ffd23f"/><path d="M${x} 60Q${+x+2.6} 66 ${x} 71Q${x-2.6} 66 ${x} 60Z" fill="#ff6a00"/></g></g>`}
+ const body=`<g><rect x="42" y="200" width="236" height="68" rx="10" fill="url(#gp)"/>${dots}<rect x="52" y="208" width="9" height="54" rx="4" fill="#ffffff30"/>${pearls}<path d="${drip(42,278,200,11)}" fill="#fff"/>
+  <text x="160" y="241" text-anchor="middle" font-size="21" font-weight="800" fill="#fff" stroke="#b01766" stroke-width=".8" font-family="Trebuchet MS,sans-serif">Happy Birthday!</text>${cher}</g>
+ <g><rect x="78" y="146" width="164" height="56" rx="9" fill="url(#gm)"/><rect x="86" y="152" width="7" height="44" rx="3" fill="#ffffff35"/>${stars}
+  <rect x="78" y="162" width="164" height="21" fill="#ff3d71"/><rect x="78" y="162" width="164" height="4" fill="#ffffff55"/>
+  <text x="160" y="177.5" text-anchor="middle" font-size="${fs.toFixed(1)}" font-weight="800" fill="#fff" font-family="Trebuchet MS,sans-serif">${nm}</text><path d="${drip(78,242,146,8)}" fill="#fff"/></g>
+ <g><rect x="108" y="102" width="104" height="46" rx="8" fill="url(#gl)"/>${rb}${hearts}<path d="${drip(108,212,102,4)}" fill="#fff"/></g>`;
+ let bunt='<path d="M-40 6Q160 52 360 6" stroke="#ffffff70" fill="none" stroke-width="1.5"/>';
+ for(let i=0;i<14;i++){const t=(i+.5)/14,u=1-t,x=u*u*-40+2*u*t*160+t*t*360,y=u*u*6+2*u*t*52+t*t*6;bunt+=`<polygon points="${(x-9).toFixed(1)},${(y-1).toFixed(1)} ${(x+9).toFixed(1)},${(y-1).toFixed(1)} ${x.toFixed(1)},${(y+19).toFixed(1)}" fill="hsl(${i*26},100%,62%)"/>`}
+ const bal=(x,y,h,d)=>`<g class="bl" style="animation-delay:${d}s"><path d="M${x} ${y+20}q-6 30 0 62" stroke="#ffffff90" fill="none"/><ellipse cx="${x}" cy="${y}" rx="16" ry="20" fill="hsl(${h},100%,60%)"/><ellipse cx="${x-5}" cy="${y-7}" rx="4" ry="6" fill="#fff8"/></g>`;
+ let tw='';[[30,72],[292,74],[62,32],[262,36],[-20,236],[338,232],[100,58],[226,62],[-24,150],[342,160]].forEach(([x,y],i)=>tw+=`<g transform="translate(${x} ${y})"><path class="tw" style="--d:${i*.25}s" d="M0 -6L1.8 -1.8L6 0L1.8 1.8L0 6L-1.8 1.8L-6 0L-1.8 -1.8Z" fill="#fff"/></g>`);
+ let clips='',inner='',pieces='',plates='';
+ for(let i=0;i<4;i++){const x0=i?42+59*i:-40,x1=i===3?360:42+59*(i+1),cx=71.5+59*i,px=34+84*i;
+  clips+=`<clipPath id="b${i}"><rect x="${x0}" y="-60" width="${x1-x0}" height="420"/></clipPath>`;
+  inner+=`<g class="inn" id="in${i}" clip-path="url(#b${i})">${layers(42,200,236,68,1)}${layers(78,146,164,56,1)}${layers(108,102,104,46,1)}</g>`;
+  pieces+=`<g transform="translate(${cx} 268)"><g class="pc" id="pc${i}" style="--tx:${px-cx}px;--ty:116px"><g transform="translate(${-cx} -268)"><g clip-path="url(#b${i})">${body}</g></g></g></g>`;
+  plates+=`<ellipse class="pl" id="pl${i}" cx="${px}" cy="386" rx="31" ry="7" fill="#fff4bd" stroke="#cdbb6b"/>`}
+ $('cakeBox').innerHTML=`<div class="disco"></div><svg id="cakeSvg" viewBox="-40 0 400 400"><defs>
+ <linearGradient id="gp" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff8fc4"/><stop offset="1" stop-color="#d92c80"/></linearGradient>
+ <linearGradient id="gm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#86f3e2"/><stop offset="1" stop-color="#28a9c4"/></linearGradient>
+ <linearGradient id="gl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cfa6ff"/><stop offset="1" stop-color="#7444e0"/></linearGradient>
+ <linearGradient id="gtb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a2fa0"/><stop offset="1" stop-color="#150c3c"/></linearGradient>
+ <linearGradient id="kb" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#9aa6bd"/><stop offset=".5" stop-color="#fff"/><stop offset="1" stop-color="#8794ad"/></linearGradient>
+ <linearGradient id="kh" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7a4a1c"/><stop offset=".5" stop-color="#c98a45"/><stop offset="1" stop-color="#6a3d15"/></linearGradient>
+ <linearGradient id="rg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#f33"/><stop offset=".2" stop-color="#fd3"/><stop offset=".4" stop-color="#3e6"/><stop offset=".6" stop-color="#3df"/><stop offset=".8" stop-color="#53f"/><stop offset="1" stop-color="#f3d"/></linearGradient>
+ ${clips}</defs>
+ ${tw}<g transform="translate(160 6)"><g class="bunt"><g transform="translate(-160 -6)">${bunt}</g></g></g>${bal(-18,128,350,0)}${bal(14,176,120,.6)}${bal(338,124,50,.3)}${bal(306,176,280,.9)}
+ <g class="chefG"><g class="bob"><text x="8" y="300" text-anchor="middle" font-size="98">🧑‍🍳</text></g><g class="put"><rect x="-4" y="272" width="46" height="18" rx="9" fill="#fff" stroke="#d9dff0"/><circle cx="42" cy="281" r="9" fill="#f5c9a0"/></g></g>
+ <rect x="-60" y="292" width="480" height="140" fill="url(#gtb)"/><rect x="-60" y="292" width="480" height="3" fill="#ffffff55"/><rect x="-60" y="298" width="480" height="3" fill="url(#rg)" opacity=".8"/>
+ ${plates}
+ <g class="cakeAll"><g class="bob"><g class="put">
+  <ellipse cx="160" cy="304" rx="60" ry="8" fill="#b9a24d"/><path d="M146 274H174L170 304H150Z" fill="#d9c47a"/><ellipse cx="160" cy="274" rx="142" ry="14" fill="#cdbb6b"/><ellipse cx="160" cy="271" rx="142" ry="13" fill="#fff4bd"/>
+  ${inner}${pieces}<g id="cand">${can}</g></g></g></g>
+ <g id="kx" style="transform:translateX(219px);transition:transform .45s ease,opacity .6s"><g class="kn" id="kn">
+  <rect x="-9" y="42" width="18" height="54" rx="8" fill="url(#kh)"/><rect x="-15" y="94" width="30" height="7" rx="3" fill="#e5c05a"/>
+  <polygon points="-7,101 7,101 7,284 0,300 -7,284" fill="url(#kb)" stroke="#fff" stroke-width="1.2"/><line x1="0" y1="106" x2="0" y2="282" stroke="#9fb0cc" stroke-width="1"/></g></g></svg>`}
+const cs=()=>$('cakeSvg');
+let ct=[],noteT,stage='',cutN=0;
+const later=(f,ms)=>ct.push(setTimeout(f,ms)), msg=t=>$('cakeMsg').textContent=t;
+const noteF=()=>{const e=document.createElement('div');e.className='fl';e.textContent=['🎵','🎶','🎈','✨','🎉'][Math.floor(Math.random()*5)];e.style.cssText=`left:${rnd(2,92)}%;font-size:${rnd(22,38)}px;animation-duration:${rnd(6,10)}s;--r:${rnd(-25,25)}deg`;document.body.appendChild(e);setTimeout(()=>e.remove(),10500)};
+function leaveCake(){ct.forEach(clearTimeout);ct=[];clearInterval(noteT);hbdStop(true);bgStop(false);stage=''}
+$('party').onclick=()=>{$('main').classList.add('hide');$('cakeWrap').classList.remove('hide');leaveCake();cutN=0;stage='intro';$('tapHint').classList.add('hide');
+ buildCake();const sv=cs();bgStart();noteT=setInterval(noteF,650);msg('Someone is bringing your cake… 🧑‍🍳');
+ for(let k=0;k<6;k++)later(()=>snd(140,.07,'square',.02,90),k*380+200);
+ later(()=>snd(220,.4,'triangle',.07,120),2500);
+ later(()=>{msg('Now adding the candles 🕯️');sv.classList.add('add');for(let k=0;k<7;k++)setTimeout(()=>snd(500+k*40,.12,'triangle',.05,300),k*260)},3100);
+ later(()=>{sv.classList.add('lit');for(let k=0;k<7;k++)setTimeout(()=>snd(1100+k*90,.1,'sine',.035),k*140);msg('Make a wish… ✨');confetti(90)},5400);
+ later(()=>{sv.classList.add('out');snd(250,.6,'sawtooth',.03,60);msg('Wish made! 💨')},8200);
+ later(()=>sv.classList.add('gone'),8900);
+ later(()=>{$('kn').classList.add('show');snd(900,.4,'sine',.05,1500);msg('Here is your knife 🔪');stage='ready';$('tapHint').classList.remove('hide')},10200)};
+function sendPiece(i){$('in'+i).style.opacity=1;$('pc'+i).classList.add('go');$('pl'+i).style.opacity=1;snd(500,.3,'triangle',.06,900);cutN++;msg(`Slice ${cutN} of 4 🍰`);confetti(25)}
+function tapCut(){if(stage!=='ready')return;stage='cutting';const kn=$('kn'),i=3-cutN;$('tapHint').classList.add('hide');if(cutN===0)hbdStart();
+ $('kx').style.transform=`translateX(${42+59*i}px)`;
+ later(()=>{kn.classList.remove('show','idle');void kn.getBoundingClientRect();kn.classList.add('cutting');snd(1000,.4,'sawtooth',.03,150)},450);
+ later(()=>sendPiece(i),450+430);
+ later(()=>{kn.classList.remove('cutting');kn.classList.add('idle')},450+1100);
+ if(cutN<2){later(()=>{stage='ready';msg('Tap again for the next slice 👆');$('tapHint').classList.remove('hide')},450+1700)}
+ else{later(()=>sendPiece(0),450+1500);later(finishCut,450+3000)}}
+function finishCut(){stage='done';hbdStop(false);for(let i=0;i<4;i++)$('in'+i).style.opacity=0;$('kx').style.opacity=0;
+ msg('🎉 Happy Birthday '+NAME+'! 🎉');confetti(300);for(let i=0;i<7;i++)setTimeout(firework,i*320);snd(600,.5,'triangle',.07,1500)}
+$('cakeWrap').addEventListener('click',e=>{if(e.target.closest('button'))return;tapCut()});
+$('cakeClose').onclick=()=>{leaveCake();$('cakeWrap').classList.add('hide');$('main').classList.remove('hide')};
+addEventListener('resize',()=>{if(revealed)hs()});
+
+/* ---------- games ---------- */
+const gc=$('game'),g=gc.getContext('2d');let GW,GH,G=null,glast=0,mode='';
+function gs(){GW=innerWidth;GH=innerHeight;gc.width=GW*DPR;gc.height=GH*DPR;g.setTransform(DPR,0,0,DPR,0,0)}
+addEventListener('resize',()=>{if(G)gs()});
+document.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>start(b.dataset.g));
+$('gBack').onclick=$('quit').onclick=()=>{G=null;gtk++;$('gIntro').classList.add('hide');$('gameWrap').classList.add('hide')};
+$('again').onclick=()=>start(mode);
+const keys={};addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=1});addEventListener('keyup',e=>{keys[e.key.toLowerCase()]=0});
+['pointerdown','pointermove','pointerup'].forEach(ev=>gc.addEventListener(ev,e=>{if(!G)return;const f=G[ev];f&&f(e.clientX,e.clientY)}));
+let gtk=0;
+const GNAME={balloon:['BALLOON BLAST','Pop every balloon!'],jet:['SKY FIGHTER','Shoot down the enemy jets!']};
+async function start(m){mode=m;const my=++gtk,ok=()=>my===gtk&&G;$('gameWrap').classList.remove('hide');$('over').classList.add('hide');gs();
+ G=m==='balloon'?balloonGame():jetGame();G.wait=true;glast=performance.now();requestAnimationFrame(gl);
+ const I=$('gIntro'),sub=$('gSub'),num=$('gNum'),bar=$('gBar');I.classList.remove('hide');num.textContent='';bar.style.transition='none';bar.style.width='0';$('gTitle').textContent=GNAME[m][0];
+ sub.textContent='Loading mission…';snd(200,.5,'sawtooth',.04,700);void bar.offsetWidth;bar.style.transition='width 1.7s linear';bar.style.width='100%';
+ await sleep(700);if(!ok())return;sub.textContent='Warming up the engines…';snd(150,.4,'square',.03,400);await sleep(600);if(!ok())return;sub.textContent='Target locked! 🎯';snd(900,.15,'square',.04);await sleep(500);if(!ok())return;
+ sub.textContent=GNAME[m][1];
+ for(const n of ['3','2','1','GO!']){num.textContent=n;num.classList.remove('pop');void num.offsetWidth;num.classList.add('pop');snd(n==='GO!'?1200:400+(3-(+n||0))*80,.25,'square',.06);await sleep(n==='GO!'?600:800);if(!ok())return}
+ I.classList.add('hide');$('tip').textContent=G.tip;setTimeout(()=>$('tip').textContent='',4000);glast=performance.now();G.wait=false}
+function gl(now){if(!G)return;const dt=Math.min((now-glast)/1000,.05);glast=now;if(!G.over&&!G.wait)G.update(dt);G.draw();requestAnimationFrame(gl)}
+function end(msg){G.over=true;$('overMsg').innerHTML=msg;$('over').classList.remove('hide');snd(300,.8,'sawtooth',.06,60)}
+function boom(a,x,y,hue,n=18){for(let i=0;i<n;i++){const an=rnd(0,6.283),s=rnd(40,260);a.push({x,y,vx:Math.cos(an)*s,vy:Math.sin(an)*s,l:rnd(.4,.9),hue:hue+rnd(-25,25)})}}
+function drawParts(a,dt){g.globalCompositeOperation='lighter';for(let i=a.length-1;i>=0;i--){const p=a[i];p.l-=dt;if(p.l<=0){a.splice(i,1);continue}p.x+=p.vx*dt;p.y+=p.vy*dt;g.fillStyle=`hsla(${p.hue},100%,60%,${Math.min(1,p.l*2)})`;g.beginPath();g.arc(p.x,p.y,3,0,6.283);g.fill()}g.globalCompositeOperation='source-over'}
+
+/* Balloon shooter - movable helicopter */
+function balloonGame(){
+ const s={tip:'Move your finger / mouse (or arrow keys). The helicopter fires by itself – pop all the balloons! 🚁',over:false,score:0,time:45,bal:[],bul:[],parts:[],x:GW/2,y:GH-170,tx:GW/2,ty:GH-170,face:1,fire:0,sp:0,el:0,shots:0,hits:0};
+ const mv=(x,y)=>{s.tx=x;s.ty=y-70};s.pointerdown=mv;s.pointermove=mv;
+ s.update=dt=>{s.time-=dt;s.el+=dt;const k=480*dt;
+  if(keys.arrowleft||keys.a)s.tx-=k;if(keys.arrowright||keys.d)s.tx+=k;if(keys.arrowup||keys.w)s.ty-=k;if(keys.arrowdown||keys.s)s.ty+=k;
+  s.tx=Math.max(50,Math.min(GW-50,s.tx));s.ty=Math.max(90,Math.min(GH-60,s.ty));
+  if(s.tx>s.x+8)s.face=1;else if(s.tx<s.x-8)s.face=-1;
+  s.x+=(s.tx-s.x)*Math.min(1,dt*9);s.y+=(s.ty-s.y)*Math.min(1,dt*9);
+  s.fire-=dt;if(s.fire<=0){s.fire=.15;s.bul.push({x:s.x-22,y:s.y-34},{x:s.x+22,y:s.y-34});s.shots+=2;snd(800,.07,'square',.025,200)}
+  s.sp-=dt;if(s.sp<=0){s.sp=Math.max(.3,.75-s.el*.006);s.bal.push({x:rnd(40,GW-40),y:GH+50,r:rnd(26,40),vy:rnd(70,140)+s.el*1.5,ph:rnd(0,6),hue:[0,60,120,180,240,300][Math.floor(rnd(0,6))]})}
+  for(const b of s.bal){b.y-=b.vy*dt;b.x+=Math.sin(T*2+b.ph)*25*dt}
+  s.bal=s.bal.filter(b=>b.y>-80);
+  for(const u of s.bul){u.y-=1000*dt;for(let i=0;i<s.bal.length;i++){const b=s.bal[i];if(Math.hypot(b.x-u.x,(b.y-u.y)*.85)<b.r+4){boom(s.parts,b.x,b.y,b.hue,22);s.bal.splice(i,1);u.dead=1;s.score+=10;s.hits++;snd(900,.15,'triangle',.07,200);break}}}
+  s.bul=s.bul.filter(u=>!u.dead&&u.y>-20);
+  $('hL').textContent='Score '+s.score;$('hR').textContent='⏱ '+Math.max(0,Math.ceil(s.time));
+  if(s.time<=0)end(`You popped <b>${s.hits}</b> balloons!<br>Score ${s.score} • Accuracy ${s.shots?Math.round(s.hits/s.shots*100):0}%`)};
+ const heli=()=>{const h=(T*120)%360,c=`hsl(${h},100%,58%)`;g.save();g.translate(s.x,s.y);g.scale(s.face,1);
+  g.fillStyle='#8892a6';g.fillRect(-27,-30,6,-0);g.fillStyle='#4b5366';g.fillRect(-25,-33,6,16);g.fillRect(19,-33,6,16);g.fillStyle='#cfd6e6';g.fillRect(-26,-36,8,5);g.fillRect(18,-36,8,5);
+  g.strokeStyle='#9aa4b8';g.lineWidth=3;g.beginPath();g.moveTo(-34,26);g.lineTo(38,26);g.moveTo(-34,26);g.lineTo(-38,20);g.moveTo(-18,18);g.lineTo(-18,26);g.moveTo(20,18);g.lineTo(20,26);g.stroke();
+  g.fillStyle=c;g.shadowColor=c;g.shadowBlur=16;g.beginPath();g.moveTo(-20,-4);g.lineTo(-84,-10);g.lineTo(-86,-26);g.lineTo(-76,-26);g.lineTo(-68,-8);g.lineTo(-20,6);g.closePath();g.fill();
+  g.beginPath();g.ellipse(0,0,46,26,0,0,6.283);g.fill();g.shadowBlur=0;
+  g.fillStyle='#ffffff55';g.beginPath();g.ellipse(-4,-8,34,8,-.05,0,6.283);g.fill();
+  const gl=g.createLinearGradient(0,-20,0,12);gl.addColorStop(0,'#e8fbff');gl.addColorStop(1,'#4aa8d8');g.fillStyle=gl;g.beginPath();g.ellipse(22,-3,22,16,0,-Math.PI*.55,Math.PI*.62);g.lineTo(6,10);g.closePath();g.fill();
+  g.fillStyle='#222';g.fillRect(-3,-30,6,8);
+  g.fillStyle='#ffffff30';g.beginPath();g.ellipse(0,-30,80,5,0,0,6.283);g.fill();
+  g.fillStyle='#e8ecf5';const r=78*(.55+.45*Math.abs(Math.sin(T*38)));g.fillRect(-r,-32,r*2,3);
+  g.save();g.translate(-80,-18);g.rotate(T*45);g.strokeStyle='#e8ecf5';g.lineWidth=3;g.beginPath();g.moveTo(-10,0);g.lineTo(10,0);g.moveTo(0,-10);g.lineTo(0,10);g.stroke();g.restore();
+  g.restore()};
+ s.draw=()=>{g.clearRect(0,0,GW,GH);
+  for(const b of s.bal){g.strokeStyle='#fff6';g.lineWidth=1;g.beginPath();g.moveTo(b.x,b.y+b.r*1.2);g.quadraticCurveTo(b.x+Math.sin(T*3+b.ph)*10,b.y+b.r*2.2,b.x,b.y+b.r*3);g.stroke();
+   const gr=g.createRadialGradient(b.x-b.r*.35,b.y-b.r*.4,3,b.x,b.y,b.r*1.2);gr.addColorStop(0,`hsl(${b.hue},100%,85%)`);gr.addColorStop(1,`hsl(${b.hue},100%,45%)`);
+   g.fillStyle=gr;g.shadowColor=`hsl(${b.hue},100%,60%)`;g.shadowBlur=18;g.beginPath();g.ellipse(b.x,b.y,b.r,b.r*1.2,0,0,6.283);g.fill();g.shadowBlur=0;
+   g.beginPath();g.moveTo(b.x,b.y+b.r*1.2);g.lineTo(b.x-6,b.y+b.r*1.2+9);g.lineTo(b.x+6,b.y+b.r*1.2+9);g.fill()}
+  g.globalCompositeOperation='lighter';for(const u of s.bul){g.fillStyle=`hsl(${(T*300)%360},100%,60%)`;g.shadowColor=g.fillStyle;g.shadowBlur=12;g.fillRect(u.x-2,u.y-12,4,20)}g.shadowBlur=0;g.globalCompositeOperation='source-over';
+  heli();drawParts(s.parts,.016)};
+ return s}
+
+/* Fighter jet */
+function jetGame(){
+ const s={tip:'Move your finger / mouse (or arrow keys). The jet fires automatically! ✈️',over:false,score:0,lives:3,x:GW/2,y:GH-150,tx:GW/2,ty:GH-150,bul:[],en:[],parts:[],st:Array.from({length:70},()=>({x:rnd(0,GW),y:rnd(0,GH),v:rnd(60,300)})),fire:0,sp:1,el:0,inv:0};
+ const mv=(x,y)=>{s.tx=x;s.ty=y-70};s.pointerdown=mv;s.pointermove=mv;
+ s.update=dt=>{s.el+=dt;s.inv-=dt;const k=480*dt;
+  if(keys.arrowleft||keys.a)s.tx-=k;if(keys.arrowright||keys.d)s.tx+=k;if(keys.arrowup||keys.w)s.ty-=k;if(keys.arrowdown||keys.s)s.ty+=k;
+  s.tx=Math.max(30,Math.min(GW-30,s.tx));s.ty=Math.max(60,Math.min(GH-50,s.ty));
+  s.x+=(s.tx-s.x)*Math.min(1,dt*12);s.y+=(s.ty-s.y)*Math.min(1,dt*12);
+  s.fire-=dt;if(s.fire<=0){s.fire=.16;s.bul.push({x:s.x-14,y:s.y-10},{x:s.x+14,y:s.y-10});snd(900,.06,'square',.02,300)}
+  s.sp-=dt;if(s.sp<=0){s.sp=Math.max(.35,1.1-s.el*.01);const big=s.el>8&&Math.random()<.2;s.en.push({x:rnd(40,GW-40),y:-50,vy:rnd(100,190)+s.el*2,hp:big?4:1,big,ph:rnd(0,6),bx:0})}
+  for(const u of s.bul)u.y-=900*dt;s.bul=s.bul.filter(u=>u.y>-20);
+  for(const e of s.en){e.y+=e.vy*(e.big?.6:1)*dt;e.bx=Math.sin(T*2+e.ph)*(e.big?20:50)}
+  for(const u of s.bul)for(const e of s.en){const sz=e.big?40:24;if(!u.d&&Math.abs(u.x-(e.x+e.bx))<sz&&Math.abs(u.y-e.y)<sz){u.d=1;e.hp--;if(e.hp<=0){e.dead=1;s.score+=e.big?50:10;boom(s.parts,e.x+e.bx,e.y,rnd(0,60),e.big?40:20);snd(150,.3,'sawtooth',.06,40)}}}
+  for(const e of s.en)if(!e.dead&&s.inv<=0&&Math.hypot(s.x-(e.x+e.bx),s.y-e.y)<(e.big?55:38)){e.dead=1;s.lives--;s.inv=1.6;boom(s.parts,s.x,s.y,200,30);snd(100,.5,'sawtooth',.08,30);if(s.lives<=0){boom(s.parts,s.x,s.y,30,50);end(`Mission over!<br>Score <b>${s.score}</b>`)}}
+  s.bul=s.bul.filter(u=>!u.d);s.en=s.en.filter(e=>!e.dead&&e.y<GH+60);
+  for(const t of s.st){t.y+=t.v*dt;if(t.y>GH){t.y=0;t.x=rnd(0,GW)}}
+  $('hL').textContent='Score '+s.score;$('hR').textContent='❤'.repeat(Math.max(0,s.lives))};
+ const jet=(x,y,sc,col,flip)=>{g.save();g.translate(x,y);g.scale(sc,flip?-sc:sc);g.fillStyle=col;g.shadowColor=col;g.shadowBlur=16;
+  g.beginPath();g.moveTo(0,-34);g.lineTo(8,-8);g.lineTo(34,14);g.lineTo(34,22);g.lineTo(9,14);g.lineTo(11,28);g.lineTo(0,24);g.lineTo(-11,28);g.lineTo(-9,14);g.lineTo(-34,22);g.lineTo(-34,14);g.lineTo(-8,-8);g.closePath();g.fill();
+  g.shadowBlur=0;g.fillStyle='#bff';g.beginPath();g.ellipse(0,-8,5,11,0,0,6.283);g.fill();
+  g.fillStyle=`hsl(${30+Math.random()*30},100%,60%)`;g.beginPath();g.moveTo(-6,26);g.lineTo(0,26+rnd(14,30));g.lineTo(6,26);g.fill();g.restore()};
+ s.draw=()=>{g.clearRect(0,0,GW,GH);g.fillStyle='#fff';for(const t of s.st)g.fillRect(t.x,t.y,1.5,t.v/80);
+  for(const e of s.en)jet(e.x+e.bx,e.y,e.big?1.5:.8,e.big?'#ff3355':'#ff8a2b',true);
+  g.globalCompositeOperation='lighter';for(const u of s.bul){g.fillStyle=`hsl(${(T*300)%360},100%,60%)`;g.shadowColor=g.fillStyle;g.shadowBlur=12;g.fillRect(u.x-2,u.y-12,4,20)}g.shadowBlur=0;g.globalCompositeOperation='source-over';
+  if(s.lives>0&&(s.inv<=0||Math.floor(T*14)%2))jet(s.x,s.y,1,`hsl(${(T*120)%360},100%,60%)`,false);drawParts(s.parts,.016)};
+ return s}
+</script>
+</body>
+</html>
